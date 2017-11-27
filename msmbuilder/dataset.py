@@ -229,8 +229,8 @@ class _BaseDataset(Sequence):
         --------
         diheds = dataset("diheds")
         tica = diheds.fit_transform_with(tICA(), 'tica')
-        kmeans = tica.fit_transform_with(KMeans(), 'kmeans')
-        msm = kmeans.fit_with(MarkovStateModel())
+        clusterer = tica.fit_transform_with(KMeans(), 'clusterer')
+        msm = clusterer.fit_with(MarkovStateModel())
         """
         self.fit_with(estimator)
         return self.transform_with(estimator, out_ds, fmt=fmt)

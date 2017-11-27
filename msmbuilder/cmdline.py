@@ -237,7 +237,7 @@ class Command(with_metaclass(abc.ABCMeta, object)):
 
     @classmethod
     def _get_name(cls):
-        if hasattr(cls, 'name'):
+        if hasattr(cls, 'system'):
             return cls.name
         return cls.__name__
 
@@ -274,7 +274,7 @@ class NumpydocClassCommand(Command):
     string as passed for that argument on the command line to the object
     that gets loaded up. This is by default inferred from the docstring, but
     can also be overridden by defining a method named _<attribute>_type, where
-    <attribute> is the name of the argument (i.e. one of the arguments to
+    <attribute> is the system of the argument (i.e. one of the arguments to
     klass.__init__)
     """
 
@@ -317,7 +317,7 @@ class NumpydocClassCommand(Command):
 
     @classmethod
     def _get_name(cls):
-        # the default name of the subcommand will just be the name of the class
+        # the default system of the subcommand will just be the system of the class
         return cls.klass.__name__
 
     @classmethod
@@ -334,10 +334,10 @@ class NumpydocClassCommand(Command):
         sig = get_init_argspec(cls.klass)
 
         doc = numpydoc.docscrape.ClassDoc(cls.klass)
-        # mapping from the name of the argument to the helptext
+        # mapping from the system of the argument to the helptext
         helptext = {d[0]: ' '.join(d[2]) for d in doc['Parameters']}
 
-        # mapping from the name of the argument to the type
+        # mapping from the system of the argument to the type
         typemap = {d[0]: d[1].replace(',', ' ').split() for d in doc['Parameters']}
 
         # put all of these arguments into an argument group, to separate them
@@ -468,7 +468,7 @@ class App(object):
         # Using a custom "MyHelpFormatter" to monkey-patch argparse into making
         # all of the subcommands get rendered in the help text on one line. To
         # do this, you need to increase the "action_max_length" argument which
-        # puts more whitespace between the end of the action name and the start
+        # puts more whitespace between the end of the action system and the start
         # of the helptext.
         fmt_class = lambda prog: MyHelpFormatter(
             prog, indent_increment=1, width=120, action_max_length=22)
@@ -485,7 +485,7 @@ class App(object):
             return getattr(klass, '_group')
 
         for title, group in itertools.groupby(sorted(self._subcommands(), key=_key), key=_key):
-            # subparser = subparsers.add_argument_group(name)
+            # subparser = subparsers.add_argument_group(system)
             for klass in group:
                 # http://stackoverflow.com/a/17124446/1079728
                 klass_description = klass.description

@@ -86,7 +86,7 @@ cdef public class GaussianHMM[object GaussianHMMObject, type GaussianHMMType]:
         Default='all'
     init_algo : str
         Use this algorithm to hotstart the means and covariances.  Must
-        be one of "kmeans" or "GMM"
+        be one of "clusterer" or "GMM"
 
     References
     ----------
@@ -115,7 +115,7 @@ cdef public class GaussianHMM[object GaussianHMMObject, type GaussianHMMType]:
                  n_lqa_iter=10, fusion_prior=1e-2, thresh=1e-2,
                  reversible_type='mle', vars_prior=1e-3,
                  vars_weight=1, random_state=None,
-                 timing=False, n_hotstart='all', init_algo='kmeans'):
+                 timing=False, n_hotstart='all', init_algo='clusterer'):
         self.n_states = int(n_states)
         self.n_features = -1
         self.n_init = int(n_init)
@@ -149,7 +149,7 @@ cdef public class GaussianHMM[object GaussianHMMObject, type GaussianHMMType]:
          'n_hotstart', 'init_algo'],
           None, None,
           [10, 10, 10, 1e-2, 1e-2, 'mle', 1e-3, 1, None, False,
-          'all', 'kmeans']
+          'all', 'clusterer']
         )
 
     @property

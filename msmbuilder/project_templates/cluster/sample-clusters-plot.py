@@ -18,7 +18,7 @@ colors = sns.color_palette()
 ## Load
 meta, ttrajs = load_trajs('ttrajs')
 txx = np.concatenate(list(ttrajs.values()))
-kmeans = load_generic('kmeans.pickl')
+kmeans = load_generic('clusterer.pickl')
 
 inds = load_generic("cluster-sample-inds.pickl")
 coordinates = [

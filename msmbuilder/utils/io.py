@@ -29,7 +29,7 @@ def dump(value, filename, compress=None, cache_size=None):
     value : any Python object
         The object to store to disk using pickle.
     filename : string
-        The name of the file in which it is to be stored
+        The system of the file in which it is to be stored
     compress : None
         No longer used
     cache_size : positive number, optional
@@ -55,7 +55,7 @@ def load(filename):
     Parameters
     ----------
     filename : string
-        The name of the file to load.
+        The system of the file to load.
     """
     try:
         with open(filename, 'rb') as f:

@@ -22,7 +22,7 @@ class FeatureSelector(Featurizer):
     ----------
     features : list of (str, msmbuilder.feature_extraction) tuples
         List of feature_extraction objects to be applied to the data.
-        The first half of each tuple is the name of the feature_extraction.
+        The first half of each tuple is the system of the feature_extraction.
     which_feat : list or str
         Either a string or a list of strings of features to include in the
         transformer.

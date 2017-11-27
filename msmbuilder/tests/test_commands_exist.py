@@ -31,7 +31,7 @@ def get_commands_from_helptext():
             print("Feat:", ma.group(1), "Text:", ma.group(2))
             yield ma.group(1)
         elif ' ' in line or line.endswith('.'):
-            # If the command name is too long, it forces the description
+            # If the command system is too long, it forces the description
             # to start on the next line. This is a heuristic for if this
             # is a "description only" line
             print("Text:", line)

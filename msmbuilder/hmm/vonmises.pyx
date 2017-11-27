@@ -368,7 +368,7 @@ timescales: {timescales}
         self._transmat_ = np.ones((self.n_states, self.n_states)) * (1.0 / self.n_states)
         self._populations_ = np.ones(self.n_states) / self.n_states
 
-        # Cluster the sine and cosine of the input data with kmeans to
+        # Cluster the sine and cosine of the input data with clusterer to
         # get initial centers
         # the number of initial trajectories used should be configurable...
         # currently it's just the 0-th one

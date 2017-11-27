@@ -41,7 +41,7 @@ automatically enable features like auto-resizing when the system supports it.
 
 from __future__ import absolute_import
 __author__ = 'Nilton Volpato'
-__author_email__ = 'first-name dot last-name @ gmail.com'
+__author_email__ = 'first-system dot last-system @ gmail.com'
 __date__ = '2011-05-14'
 __version__ = '2.3'
 

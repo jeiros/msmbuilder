@@ -42,6 +42,7 @@ def get_layout():
                             'msm/microstate.py',
                             'msm/microstate-plot.py',
                             'msm/microstate-traj.py',
+                            'msm/sources-and-sinks.py'
                         ],
                         [],
                     )
@@ -209,7 +210,7 @@ class Template(object):
         nb = new_notebook(
             cells=cells,
             metadata={'kernelspec': {
-                'name': 'python3',
+                'system': 'python3',
                 'display_name': 'Python 3'
             }})
         backup(templ_ipynb_fn)

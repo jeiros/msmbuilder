@@ -159,7 +159,7 @@ class HierarchyParser(GenericParser):
         Number of picoseconds per frame
     ignore_fext : bool
         Ignore file extensions. If set to true, this will fail if there is
-        more than one "." per file/directory name. Anything after a "." is
+        more than one "." per file/directory system. Anything after a "." is
         considered a file extension and will be ignored; including in
         directory names
     """

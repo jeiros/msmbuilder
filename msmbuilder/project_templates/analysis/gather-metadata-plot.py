@@ -6,39 +6,39 @@
 # ? include "plot_header.template"
 # ? from "plot_macros.template" import xdg_open with context
 
+import matplotlib
 import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
-
+from glob import glob
 from msmbuilder.io import load_meta, render_meta
 
 sns.set_style('ticks')
 colors = sns.color_palette()
 
-## Load
-meta = load_meta()
+# Load
 
 
-## Histogram of trajectory lengths
-def plot_lengths(ax):
+# Histogram of trajectory lengths
+def plot_lengths(ax, meta):
     lengths_ns = meta['nframes'] * (meta['step_ps'] / 1000)
     ax.hist(lengths_ns)
-    ax.set_xlabel("Lenths / ns", fontsize=16)
+    ax.set_xlabel("Lengths / ns", fontsize=16)
     ax.set_ylabel("Count", fontsize=16)
 
     total_label = ("Total length: {us:.2f}"
                    .format(us=np.sum(lengths_ns) / 1000))
     total_label += r" / $\mathrm{\mu s}$"
     ax.annotate(total_label,
-                xy=(0.05, 0.95),
+                xy=(0.55, 0.95),
                 xycoords='axes fraction',
                 fontsize=18,
                 va='top',
                 )
 
 
-## Pie graph
-def plot_pie(ax):
+# Pie graph
+def plot_pie(ax, meta):
     lengths_ns = meta['nframes'] * (meta['step_ps'] / 1000)
     sampling = lengths_ns.groupby(level=0).sum()
 
@@ -50,8 +50,8 @@ def plot_pie(ax):
     ax.axis('equal')
 
 
-## Box plot
-def plot_boxplot(ax):
+# Box plot
+def plot_boxplot(ax, meta):
     meta2 = meta.copy()
     meta2['ns'] = meta['nframes'] * (meta['step_ps'] / 1000)
     sns.boxplot(
@@ -61,27 +61,46 @@ def plot_boxplot(ax):
         ax=ax,
     )
 
+if __name__ == '__main__':
+    meta = load_meta()
+    # Plot hist
+    fig, ax = plt.subplots(figsize=(7, 5))
+    plot_lengths(ax, meta)
+    fig.tight_layout()
+    fig.savefig("lengths-hist.pdf")
+    #
 
-## Plot hist
-fig, ax = plt.subplots(figsize=(7, 5))
-plot_lengths(ax)
-fig.tight_layout()
-fig.savefig("lengths-hist.pdf")
-# {{xdg_open('lengths-hist.pdf')}}
+    # Plot pie
+    fig, ax = plt.subplots(figsize=(7, 5))
+    plot_pie(ax, meta)
+    fig.tight_layout()
+    fig.savefig("lengths-pie.pdf")
+    #
 
-## Plot pie
-fig, ax = plt.subplots(figsize=(7, 5))
-plot_pie(ax)
-fig.tight_layout()
-fig.savefig("lengths-pie.pdf")
-# {{xdg_open('lengths-pie.pdf')}}
+    # Plot box
+    fig, ax = plt.subplots(figsize=(7, 5))
+    plot_boxplot(ax, meta)
+    fig.tight_layout()
+    fig.savefig("lengths-boxplot.pdf")
 
-## Plot box
-fig, ax = plt.subplots(figsize=(7, 5))
-plot_boxplot(ax)
-fig.tight_layout()
-fig.savefig("lengths-boxplot.pdf")
-# {{xdg_open('lengths-boxplot.pdf')}}
+    for f in glob('*meta.pickl'):
+        meta = load_meta(f)
+        name = ''.join(f.split('.')[0].split('_')[0:3])
+        fig, ax = plt.subplots(figsize=(7, 5))
+        plot_lengths(ax, meta)
+        fig.tight_layout()
+        fig.savefig("%slengths-hist.pdf" % name)
+        #
 
-## Save metadata as html table
-render_meta(meta, 'meta.pandas.html')
+        # Plot pie
+        fig, ax = plt.subplots(figsize=(7, 5))
+        plot_pie(ax, meta)
+        fig.tight_layout()
+        fig.savefig("%slengths-pie.pdf" % name)
+        #
+
+        # Plot box
+        fig, ax = plt.subplots(figsize=(7, 5))
+        plot_boxplot(ax, meta)
+        fig.tight_layout()
+        fig.savefig("%slengths-boxplot.pdf" % name)

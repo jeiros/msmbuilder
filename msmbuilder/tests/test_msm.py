@@ -353,7 +353,7 @@ def test_sample_1():
     # Create a fake topology with 1 atom to match our input dataset
     top = md.Topology.from_dataframe(
         pd.DataFrame({
-            "serial": [0], "name": ["HN"], "element": ["H"], "resSeq": [1],
+            "serial": [0], "system": ["HN"], "element": ["H"], "resSeq": [1],
             "resName": "RES", "chainID": [0]
         }), bonds=np.zeros(shape=(0, 2), dtype='int')
     )

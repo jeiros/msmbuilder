@@ -17,7 +17,7 @@ from msmbuilder.io import load_trajs, save_generic, preload_top, backup, load_ge
 
 ## Load
 meta, ttrajs = load_trajs('ttrajs')
-kmeans = load_generic("kmeans.pickl")
+kmeans = load_generic("clusterer.pickl")
 
 ## Sample
 inds = sample_states(ttrajs,
@@ -38,3 +38,4 @@ for state_i, state_inds in enumerate(inds):
         for traj_i, frame_i in state_inds
     )
     traj.save("{}/{}.xtc".format(out_folder, state_i))
+

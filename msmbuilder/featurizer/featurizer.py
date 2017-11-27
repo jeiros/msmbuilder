@@ -177,7 +177,7 @@ class Featurizer(BaseEstimator, TransformerMixin):
                 - resseqs: unique residue sequence ids (not necessarily
                   0-indexed)
                 - resids: unique residue ids (0-indexed)
-                - featurizer: Featurizer name
+                - featurizer: Featurizer system
                 - featuregroup: Other information
 
         Notes
