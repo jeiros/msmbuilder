@@ -23,6 +23,7 @@ def get_layout():
             'tica/tica-plot.py',
             'tica/tica-sample-coordinate.py',
             'tica/tica-sample-coordinate-plot.py',
+            'tica/Makefile'
         ],
         [
             TemplateDir(
@@ -32,6 +33,7 @@ def get_layout():
                     'cluster/cluster-plot.py',
                     'cluster/sample-clusters.py',
                     'cluster/sample-clusters-plot.py',
+                    'cluster/Makefile'
                 ],
                 [
                     TemplateDir(
@@ -42,7 +44,8 @@ def get_layout():
                             'msm/microstate.py',
                             'msm/microstate-plot.py',
                             'msm/microstate-traj.py',
-                            'msm/sources-and-sinks.py'
+                            'msm/sources-and-sinks.py',
+                            'msm/Makefile',
                         ],
                         [],
                     )
@@ -87,6 +90,7 @@ def get_layout():
                         [
                             'dihedrals/featurize.py',
                             'dihedrals/featurize-plot.py',
+                            'dihedrals/Makefile'
                         ],
                         [tica_msm],
                     )
