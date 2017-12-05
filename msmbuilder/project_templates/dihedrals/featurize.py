@@ -14,7 +14,7 @@ import mdtraj as md
 from msmbuilder.featurizer import DihedralFeaturizer
 from msmbuilder.preprocessing import RobustScaler
 from msmbuilder.io import load_meta, preload_tops, save_trajs, save_generic
-from msmadapter.traj_utils import get_sctrajs
+from msmadapter.utils import get_sctrajs
 from multiprocessing import Pool
 
 ## Load
