@@ -33,9 +33,9 @@ def plot_timescales(ax, timescales, ylabel=True):
     xx = np.linspace(xmin, xmax)
     ax.plot(xx, xx, color=colors[2], label='$y=x$')
     ax.legend(loc='best', fontsize=14)
-    ax.set_xlabel('Lag Time / ns', fontsize=18)
+    ax.set_xlabel('Lag Time (ns)', fontsize=18)
     if ylabel:
-        ax.set_ylabel('Implied Timescales / ns', fontsize=18)
+        ax.set_ylabel('Implied Timescales (ns)', fontsize=18)
     ax.set_yscale('log')
     ax.set_xscale('log')
 
@@ -48,9 +48,10 @@ def plot_trimmed(ax, timescales):
             )
     ax.axhline(100, color='k', ls='--', label='100%')
     ax.legend(loc='best', fontsize=14)
-    ax.set_xlabel('Lag Time / ns', fontsize=18)
-    ax.set_ylabel('Retained / %', fontsize=18)
+    ax.set_xlabel('Lag Time (ns)', fontsize=18)
+    ax.set_ylabel('Retained (%)', fontsize=18)
     ax.set_ylim((0, 105))
+    ax.set_xscale('log')
 
 
 # Load
