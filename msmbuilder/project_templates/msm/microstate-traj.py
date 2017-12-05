@@ -29,7 +29,7 @@ msms_type = load_generic('msm_dict.pkl')
 
 # Sample
 # Warning: make sure ttrajs and clusterer centers have
-# the same number of
+# the same number of dimensions
 
 for system in ttrajs_subtypes.keys():
     system_name = ''.join(system.split())
