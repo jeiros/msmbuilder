@@ -20,6 +20,26 @@ colors = sns.color_palette()
 
 st = 10  # for smalled 2d trace plots
 
+
+def bar_plot_tic_loadings(tica, ax=None, n_tics=3):
+    if ax is None:
+        ax = plt.gca()
+
+    n_feats_plot = tica.n_features + 1
+    for i in range(n_tics):
+        ax.bar(
+            range(1, n_feats_plot),
+            tica.components_[i, :],
+            alpha=0.5,
+            label='tIC{}'.format(i + 1)
+        )
+    xx = np.arange(1, n_feats_plot)
+    ax.set_xticks(xx)
+    ax.set_xlim((0, n_feats_plot))
+    ax.legend(loc='best')
+    return ax
+
+
 if __name__ == '__main__':
     # Load
     tica = load_generic('tica.pkl')
@@ -27,6 +47,7 @@ if __name__ == '__main__':
     txx = np.concatenate(list(ttrajs.values()))
     ttrajs_subtypes = split_trajs_by_type(ttrajs, meta)
     timestep = meta['step_ps'].unique()[0] / 1000
+
     # Plot 1 (tICA timescales)
     fig, ax = plt.subplots(figsize=(3, 5))
     plot_tica_timescales(tica=tica, meta=meta, ax=ax, color='tarragon')
@@ -73,10 +94,17 @@ if __name__ == '__main__':
         plot_free_energy(txx, obs=(0, 1), n_levels=6, vmin=1e-25, ax=ax,
                          cmap='viridis', cbar=True, xlabel='tIC 1', ylabel='tIC 2',
                          cbar_kwargs={'format': '%d', 'label': 'Free energy (kcal/mol)'})
-        plot_trace2d(  # data=[np.concatenate(list(v.values()))[::st]],
+        plot_trace2d(
             data=[val[::st] for val in v.values()],
             ts=timestep * st, ax=ax
         )
         ax.set_title(k)
         f.tight_layout()
         f.savefig('tica_2dtrace_{}.pdf'.format(''.join(k.split())))
+
+    # Plot 8 (tICA loadings)
+    f, ax = plt.subplots(figsize=(7, 5))
+    ax = bar_plot_tic_loadings(tica=tica, ax=ax)
+    ax.set(ylabel='Component')
+    f.tight_layout()
+    f.savefig('tica_loadings.pdf')
