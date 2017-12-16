@@ -14,4 +14,3 @@ sources: msm_dict.pkl
 
 clean:
 	rm -rf *bak*
-	rm *pdf
