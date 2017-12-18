@@ -21,21 +21,22 @@ meta = load_meta()
 timestep = int(meta['step_ps'].unique())
 
 # Parameters
+# If timestep is 200 ps, and we use a stride of 10
+# new time between frames is 2 ns
 lagtimes = [
-    1,
-    10,
-    100,
-    250,
-    500
+    1,  # 2 ns
+    10,  # 20 ns
+    100,  # 200 ns
+    200,  # 400 ns
 ]
 st = 10
 print(lagtimes)
 
 
-## Define what to do for parallel execution
+# Define what to do for parallel execution
 def at_lagtime(lt, ktrajs):
     print('lt = ', lt)
-    msm = MarkovStateModel(lag_time=lt, n_timescales=10, verbose=True)
+    msm = MarkovStateModel(lag_time=lt, n_timescales=5, verbose=True)
     msm.fit(list(ktrajs.values()))
     ret = {
         'lag_time': lt * timestep * st / 1000,  # in ns

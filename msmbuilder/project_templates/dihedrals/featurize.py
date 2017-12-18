@@ -39,6 +39,6 @@ with Pool() as pool:
 ## Save
 save_trajs(dihed_trajs, 'ftrajs', meta)
 save_generic(dihed_feat, 'featurizer.pkl')
-rs.fit(dihed_trajs)
+rs.fit(list(dihed_trajs.values()))
 sc_trajs = get_sctrajs(dihed_trajs, rs)
 save_trajs(sc_trajs, 'sctrajs', meta)
