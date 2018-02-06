@@ -16,6 +16,13 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from msmbuilder.io import load_trajs, load_generic
 from plot_utils import plot_ergodic_subspace, plot_overlayed_types
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
+
 sns.set_style('ticks')
 colors = sns.color_palette()
 
@@ -78,7 +85,7 @@ for name, msm in msms_type.items():
     i += 1
 plt.legend(loc='best')
 fig.tight_layout()
-fig.savefig('ergodic_subspace.pdf')
+fig.savefig('{}/ergodic_subspace.pdf'.format(o_dir))
 fig.clf()
 
 # Transition plots with source and sinks
@@ -89,5 +96,5 @@ for name, msm in msms_type.items():
         ax.set_title(name)
         ax = plot_microstates(ax, msm=msm, eigenvector=ev, clabel='{} dynamical eigenvector'.format(ev_name))
         f.tight_layout()
-        f.savefig('{}'.format(ev_name) + '_'.join(name.split()) + '.pdf')
+        f.savefig('{}/{}'.format(o_dir, ev_name) + '_'.join(name.split()) + '.pdf')
         f.clf()

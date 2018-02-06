@@ -15,10 +15,21 @@ from msmexplorer import plot_free_energy, plot_trace2d
 from plot_utils import plot_tica_timescales, plot_singletic_trajs, plot_overlayed_types
 from traj_utils import split_trajs_by_type
 from plot_utils import figure_dims
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
+
+
 sns.set_style('ticks')
 colors = sns.color_palette()
 
 st = 10  # for smalled 2d trace plots
+
+
+
 
 
 def bar_plot_tic_loadings(tica, ax=None, n_tics=3):
@@ -53,7 +64,7 @@ if __name__ == '__main__':
     plot_tica_timescales(tica=tica, meta=meta, ax=ax, color='tarragon')
     fig = plt.gcf()
     fig.tight_layout()
-    fig.savefig('tica_timescales.pdf')
+    fig.savefig('{}/tica_timescales.pdf'.format(o_dir))
 
     # Plot 2 (tICA landscape)
     fig, ax = plt.subplots(figsize=figure_dims(600, factor=0.9))
@@ -61,7 +72,7 @@ if __name__ == '__main__':
                      cmap='viridis', cbar=True, xlabel='tIC 1', ylabel='tIC 2',
                      cbar_kwargs={'format': '%d', 'label': 'Free energy (kcal/mol)'})
     fig.tight_layout()
-    fig.savefig('tica_landscape.pdf')
+    fig.savefig('{}/tica_landscape.pdf'.format(o_dir))
 
     # Plot 3 (Three first tIC trajs for each system type)
     for system_type in ttrajs_subtypes.keys():
@@ -69,7 +80,7 @@ if __name__ == '__main__':
                              xlabel='Time (ns)', figsize=figure_dims(600, factor=0.9))
         f = plt.gcf()
         f.tight_layout()
-        f.savefig('tica_indiv_{}.pdf'.format(''.join(system_type.split())))
+        f.savefig('{}/tica_indiv_{}.pdf'.format(o_dir, ''.join(system_type.split())))
 
     # Plot 4 (Each type overlayed on landscape)
     f, ax = plt.subplots(figsize=figure_dims(600, factor=0.9))
@@ -86,7 +97,7 @@ if __name__ == '__main__':
         }
     )
     f.tight_layout()
-    f.savefig("tica_landscape_traj_types_overlayed.pdf")
+    f.savefig("{}/tica_landscape_traj_types_overlayed.pdf".format(o_dir))
 
     # Plots 5-7 (2D traces of trajs inside each type)
     for k, v in ttrajs_subtypes.items():
@@ -100,11 +111,11 @@ if __name__ == '__main__':
         )
         ax.set_title(k)
         f.tight_layout()
-        f.savefig('tica_2dtrace_{}.pdf'.format(''.join(k.split())))
+        f.savefig('{}/tica_2dtrace_{}.pdf'.format(o_dir, ''.join(k.split())))
 
     # Plot 8 (tICA loadings)
     f, ax = plt.subplots(figsize=(7, 5))
     ax = bar_plot_tic_loadings(tica=tica, ax=ax)
     ax.set(ylabel='Component')
     f.tight_layout()
-    f.savefig('tica_loadings.pdf')
+    f.savefig('{}/tica_loadings.pdf'.format(o_dir))

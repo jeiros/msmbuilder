@@ -11,6 +11,12 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 from msmbuilder.io import load_trajs
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
 
 sns.set_style('ticks')
 colors = sns.color_palette()
@@ -43,7 +49,7 @@ def bad_trajs(cutoff=0.7):
 fig, ax = plt.subplots(figsize=(6, 3))
 plot_boxplot(ax)
 fig.tight_layout()
-fig.savefig("rmsd-boxplot.pdf")
+fig.savefig("{}/rmsd-boxplot.pdf".format(o_dir))
 # {{xdg_open('rmsd-boxplot.pdf')}}
 
 ## Bad trajectories

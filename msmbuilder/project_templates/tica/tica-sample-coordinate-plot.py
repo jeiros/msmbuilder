@@ -14,6 +14,12 @@ from matplotlib import pyplot as plt
 from msmexplorer import plot_free_energy
 from traj_utils import split_trajs_by_type
 from msmbuilder.io import load_trajs, load_generic
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+os.mkdir(o_dir)
+
 
 sns.set_style('ticks')
 colors = sns.color_palette()
@@ -71,9 +77,9 @@ def plot_tic1_sampled_trajs(ax):
 fig, ax = plt.subplots(figsize=(7, 5))
 plot_sampled_traj(ax)
 fig.tight_layout()
-fig.savefig('tica-dimension-0-heatmap.pdf')
+fig.savefig('{}/tica-dimension-0-heatmap.pdf'.format(o_dir))
 # Plot tic1 for each frame
 fig, ax = plt.subplots(figsize=(7, 5))
 plot_tic1_sampled_trajs(ax)
 fig.tight_layout()
-fig.savefig('tica-dimension-0-trajs.pdf')
+fig.savefig('{}/tica-dimension-0-trajs.pdf'.format(o_dir))

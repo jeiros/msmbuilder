@@ -16,6 +16,10 @@ from msmbuilder.io import load_trajs, save_generic, preload_tops, backup, load_g
 from msmbuilder.io.sampling import sample_msm
 from traj_utils import split_trajs_by_type
 from matplotlib import pyplot as plt
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
 
 # Settings
 n_steps = 500
@@ -35,7 +39,8 @@ for system in ttrajs_subtypes.keys():
     system_name = ''.join(system.split())
     msm = msms_type[system]
     ttrajs = ttrajs_subtypes[system]
-    inds = sample_msm(ttrajs, clusterer.cluster_centers_, msm, n_steps=n_steps, stride=st)
+    inds = sample_msm(ttrajs, clusterer.cluster_centers_, msm,
+                      n_steps=n_steps, stride=st)
     save_generic(inds, '{}msm-traj-inds.pkl'.format(system_name))
     ttrajs_of_inds = []
     for pair in inds:
@@ -44,16 +49,18 @@ for system in ttrajs_subtypes.keys():
     # Plot states of traj on tIC space
     f, ax = plt.subplots()
     ax = plot_free_energy(txx, obs=(0, 1), n_samples=10000, ax=ax)
-    ax = plot_trace2d(np.asarray(ttrajs_of_inds), cbar_kwargs={'label': 'Frame'})
+    ax = plot_trace2d(np.asarray(ttrajs_of_inds),
+                      cbar_kwargs={'label': 'Frame'})
     ax.set(xlabel='tIC1', ylabel='tIC2', title=str(system))
-    f.savefig('{}-msm-traj-tICA-landscape.pdf'.format(system_name))
+    f.savefig('{}/{}-msm-traj-tICA-landscape.pdf'.format(o_dir, system_name))
     # Plot states of traj vs. time
     ax, side_ax = plot_trace(np.asarray(ttrajs_of_inds)[:, 0], label='tIC1')
-    plot_trace(np.asarray(ttrajs_of_inds)[:, 1], ax=ax, side_ax=side_ax, color='tarragon', label='tIC2')
+    plot_trace(np.asarray(ttrajs_of_inds)[:, 1], ax=ax, side_ax=side_ax,
+               color='tarragon', label='tIC2')
     ax.set(xlabel='Frame', ylabel='tIC', title=str(system))
     f = plt.gcf()
     f.tight_layout()
-    f.savefig('{}-msm-traj-tICs-frame.pdf'.format(system_name))
+    f.savefig('{}/{}-msm-traj-tICs-frame.pdf'.format(o_dir, system_name))
     # Make traj
     top = meta.iloc[inds[0][0]]['top_abs_fn']
     traj = md.join(

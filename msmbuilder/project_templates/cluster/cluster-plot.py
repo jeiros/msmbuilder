@@ -13,6 +13,13 @@ from matplotlib import pyplot as plt
 
 from msmbuilder.io import load_trajs, load_generic
 
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
+
 sns.set_style('ticks')
 colors = sns.color_palette()
 
@@ -41,7 +48,7 @@ def plot_cluster_centers(ax):
 fig, ax = plt.subplots(figsize=(7, 5))
 plot_cluster_centers(ax)
 fig.tight_layout()
-fig.savefig('clusterer-centers.pdf')
+fig.savefig('{}/clusterer-centers.pdf'.format(o_dir))
 #
 
 # {{xdg_open('clusterer-centers.pdf')}}

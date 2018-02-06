@@ -12,6 +12,12 @@ from matplotlib import pyplot as plt
 
 from msmbuilder.io import load_trajs, load_generic
 
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
 sns.set_style('ticks')
 colors = sns.color_palette()
 
@@ -89,7 +95,7 @@ def load_in_vmd(dirname='cluster_samples'):
 fig, ax = plt.subplots(figsize=(7, 5))
 plot_sampled_states(ax)
 fig.tight_layout()
-fig.savefig('cluster-samples.pdf')
+fig.savefig('{}/cluster-samples.pdf'.format(o_dir))
 # {{xdg_open('cluster-samples.pdf')}}
 
 ## Render vmd

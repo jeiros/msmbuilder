@@ -11,6 +11,13 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from msmbuilder.io import load_generic, load_meta
 from plot_utils import figure_dims
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
+
 sns.set_style('ticks')
 colors = sns.color_palette()
 
@@ -64,4 +71,4 @@ for system in meta.type.unique():
     plt.suptitle(system)
     plot_trimmed(ax1, df)
     plot_timescales(ax2, df)
-    f.savefig('{}timescales.pdf'.format(system_name))
+    f.savefig('{}/{}timescales.pdf'.format(o_dir, system_name))

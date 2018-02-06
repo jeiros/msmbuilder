@@ -19,7 +19,7 @@ dim = 5
 meta, ttrajs = load_trajs('ttrajs')
 ttrajs_subtypes = split_trajs_by_type(ttrajs, meta)
 # Fit
-clusterer = MiniBatchKMeans(n_clusters=1000)
+clusterer = MiniBatchKMeans(n_clusters=n_clusters)
 print('Fitting clustering...')
 clusterer.fit([traj[:, :dim] for traj in ttrajs.values()])
 save_generic(clusterer, 'clusterer.pkl')

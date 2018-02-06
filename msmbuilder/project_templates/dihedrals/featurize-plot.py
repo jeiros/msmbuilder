@@ -11,6 +11,13 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 from msmbuilder.io import load_trajs
 
+import datetime
+import os
+today = datetime.date.today().isoformat()
+o_dir = '{}_plots'.format(today)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
+
 sns.set_style('ticks')
 colors = sns.color_palette()
 
@@ -50,5 +57,5 @@ def plot_box(ax):
 fig, ax = plt.subplots(figsize=(15, 5))
 plot_box(ax)
 fig.tight_layout()
-fig.savefig("ftrajs-box.pdf")
+fig.savefig("{}/ftrajs-box.pdf".format(o_dir))
 # {{ xdg_open('ftrajs-box.pdf') }}
