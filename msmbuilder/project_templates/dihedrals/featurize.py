@@ -17,13 +17,15 @@ from msmbuilder.io import load_meta, preload_tops, save_trajs, save_generic
 from msmadapter.utils import get_sctrajs
 from multiprocessing import Pool
 
-## Load
+# Load
 meta = load_meta()
 tops = preload_tops(meta)
 dihed_feat = DihedralFeaturizer()
 rs = RobustScaler()
 
-## Featurize logic
+# Featurize logic
+
+
 def feat(irow):
     i, row = irow
     print('Loading traj {}'.format(row['traj_fn']))
@@ -32,13 +34,14 @@ def feat(irow):
     return i, feat_traj
 
 
-## Do it in parallel
+# Do it in parallel
 with Pool() as pool:
     dihed_trajs = dict(pool.imap_unordered(feat, meta.iterrows()))
 
-## Save
+# Save
 save_trajs(dihed_trajs, 'ftrajs', meta)
 save_generic(dihed_feat, 'featurizer.pkl')
 rs.fit(list(dihed_trajs.values()))
+save_generic(rs, 'scaler.pkl')
 sc_trajs = get_sctrajs(dihed_trajs, rs)
 save_trajs(sc_trajs, 'sctrajs', meta)

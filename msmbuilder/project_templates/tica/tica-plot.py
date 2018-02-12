@@ -32,22 +32,19 @@ st = 10  # for smalled 2d trace plots
 
 
 
-def bar_plot_tic_loadings(tica, ax=None, n_tics=3):
+def plot_tic_loadings(tica, ax=None, n_tics=3):
     if ax is None:
         ax = plt.gca()
 
-    n_feats_plot = tica.n_features + 1
     for i in range(n_tics):
-        ax.bar(
-            range(1, n_feats_plot),
+        ax.plot(
             tica.components_[i, :],
-            alpha=0.5,
+            alpha=1,
             label='tIC{}'.format(i + 1)
         )
-    xx = np.arange(1, n_feats_plot)
-    ax.set_xticks(xx)
-    ax.set_xlim((0, n_feats_plot))
+
     ax.legend(loc='best')
+    ax.set(ylabel='tIC weight', xlabel='Feature index')
     return ax
 
 
@@ -115,7 +112,7 @@ if __name__ == '__main__':
 
     # Plot 8 (tICA loadings)
     f, ax = plt.subplots(figsize=(7, 5))
-    ax = bar_plot_tic_loadings(tica=tica, ax=ax)
+    ax = plot_tic_loadings(tica=tica, ax=ax)
     ax.set(ylabel='Component')
     f.tight_layout()
     f.savefig('{}/tica_loadings.pdf'.format(o_dir))
