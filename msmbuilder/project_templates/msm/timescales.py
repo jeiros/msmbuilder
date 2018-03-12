@@ -67,3 +67,4 @@ for system in meta.type.unique():
     df = pd.DataFrame(results)
     # Save
     df.to_pickle('{}timescales.pandas.pkl'.format(system_name))
+    df.to_html('{}timescales.pandas.html'.format(system_name))
