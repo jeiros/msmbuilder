@@ -30,7 +30,7 @@ def plot_timescales(ax, timescales, ylabel=True):
         ax.errorbar(
             x=timescales['lag_time'],
             y=timescales['timescale_{}'.format(i)] * 1000,  # in ns
-            yerr=timescales['timescale_{}_unc'.format(i)],
+            yerr=timescales['timescale_{}_unc'.format(i)] * 1000,  # in ns
             label=None,  # pandas be interfering
             fmt='o',
         )
