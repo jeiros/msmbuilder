@@ -35,8 +35,13 @@ for system, msm in msms_type.items():
         sink_dir = '{}/{}/sink'.format(system_name, ev_name)
 
 
-        backup(source_dir)
-        backup(sink_dir)
+        backup('{}/'.format(system_name)) # backup root folder to avoid clashes
+
+
+        if not os.path.isdir(source_dir):
+            os.makedirs(source_dir)
+        if not os.path.isdir(sink_dir):
+            os.makedirs(sink_dir)
 
         # Find inds of samples
         src_ev = sample_states(
