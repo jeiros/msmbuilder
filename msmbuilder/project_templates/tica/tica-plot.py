@@ -14,9 +14,11 @@ from msmbuilder.io import load_trajs, load_generic
 from msmexplorer import plot_free_energy, plot_trace2d
 from plot_utils import plot_tica_timescales, plot_singletic_trajs, plot_overlayed_types
 from traj_utils import split_trajs_by_type
-from plot_utils import figure_dims
+from plot_utils import figure_dims, plot_tic_loadings
 import datetime
 import os
+
+
 today = datetime.date.today().isoformat()
 o_dir = '{}_plots'.format(today)
 if not os.path.exists(o_dir):
@@ -26,26 +28,7 @@ if not os.path.exists(o_dir):
 sns.set_style('ticks')
 colors = sns.color_palette()
 
-st = 10  # for smalled 2d trace plots
-
-
-
-
-
-def plot_tic_loadings(tica, ax=None, n_tics=3):
-    if ax is None:
-        ax = plt.gca()
-
-    for i in range(n_tics):
-        ax.plot(
-            tica.components_[i, :],
-            alpha=1,
-            label='tIC{}'.format(i + 1)
-        )
-
-    ax.legend(loc='best')
-    ax.set(ylabel='tIC weight', xlabel='Feature index')
-    return ax
+st = 10  # for smaller 2d trace plots
 
 
 if __name__ == '__main__':
