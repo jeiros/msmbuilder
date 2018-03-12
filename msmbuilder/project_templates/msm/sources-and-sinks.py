@@ -2,7 +2,7 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 from msmbuilder.io import load_generic, load_trajs, load_meta
-from plot_utils import figure_dims, plot_src_sink, plot_microstates
+from plot_utils import figure_dims, plot_src_sink, plot_microstates, plot_tpt
 from traj_utils import split_trajs_by_type, load_in_vmd, \
     get_source_sink, generate_traj_from_stateinds, write_cpptraj_script
 from msmadapter.adaptive import create_folder
@@ -106,34 +106,22 @@ for system, msm in msms_type.items():
             i += 1
 
         # TPT analysis
-        # Top path plot
+        # Top paths plot
+        num_paths = 3
 
         pos = clusterer.cluster_centers_[msm.state_labels_][:, 0:2]
         w = msm.left_eigenvectors_[:, ev] - msm.left_eigenvectors_[:, ev].min()
         w /= w.max()
         f, ax = plt.subplots(figsize=figure_dims(600, 0.9))
-        ax = msme.plot_free_energy(
-            txx,
-            obs=(0, 1),
-            vmin=1e-25,
-            cmap='viridis',
-            xlabel='tIC1',
-            ylabel='tIC2',
-            n_levels=8,
+        ax = plot_tpt(
+            msm=msm,
+            clusterer=clusterer,
+            txx=txx,
+            ev=ev,
             ax=ax,
-        )
-        cmap = msme.utils.make_colormap(
-            ['pomegranate', 'lightgrey', 'rawdenim']
-        )
-        ax = msme.plot_tpaths(
-            msm,
-            [np.argmin(msm.left_eigenvectors_[:, ev])],
-            [np.argmax(msm.left_eigenvectors_[:, ev])],
-            pos=pos,
-            ax=ax,
-            node_color=cmap(w),
-            with_labels=False,
-            num_paths=3
+            title='Top {} paths -- {} dynamical process'.format(num_paths, ev_name),
+            num_paths=num_paths
+
         )
         f.savefig('{}/{}/top_paths.pdf'.format(system_name, ev_name))
         # Save clusters along top path
@@ -141,14 +129,13 @@ for system, msm in msms_type.items():
         net_flux = tpt.net_fluxes(
             [np.argmin(msm.left_eigenvectors_[:, ev])],
             [np.argmax(msm.left_eigenvectors_[:, ev])],
-            msm,
-            for_committors=None
+            msm
         )
         paths, _ = tpt.paths(
             [np.argmin(msm.left_eigenvectors_[:, ev])],
             [np.argmax(msm.left_eigenvectors_[:, ev])],
             net_flux,
-            num_paths=5)
+            num_paths=num_paths)
 
         for path_no, path in enumerate(paths):
             path_dir = '{}/{}/path{}'.format(system_name, ev_name, path_no)
