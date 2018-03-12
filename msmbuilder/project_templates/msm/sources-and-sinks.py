@@ -7,6 +7,7 @@ from traj_utils import split_trajs_by_type, load_in_vmd, \
     get_source_sink, generate_traj_from_stateinds, write_cpptraj_script
 from msmadapter.adaptive import create_folder
 from msmbuilder.io.sampling import sample_states
+from msmbuilder.io import backup
 from msmbuilder import tpt
 import msmexplorer as msme
 import os
@@ -33,10 +34,9 @@ for system, msm in msms_type.items():
         source_dir = '{}/{}/source'.format(system_name, ev_name)
         sink_dir = '{}/{}/sink'.format(system_name, ev_name)
 
-        if not os.path.isdir(source_dir):
-            os.makedirs(source_dir)
-        if not os.path.isdir(sink_dir):
-            os.makedirs(sink_dir)
+
+        backup(source_dir)
+        backup(sink_dir)
 
         # Find inds of samples
         src_ev = sample_states(
