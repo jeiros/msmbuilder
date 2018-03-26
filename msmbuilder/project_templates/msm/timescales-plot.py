@@ -46,6 +46,9 @@ def plot_timescales(ax, timescales, ylabel=True):
     ax.set_yscale('log')
     ax.set_xscale('log')
 
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
+
 
 def plot_trimmed(ax, timescales):
     ax.plot(timescales['lag_time'],
@@ -53,11 +56,14 @@ def plot_trimmed(ax, timescales):
             'o-',
             label=None,  # pandas be interfering
             )
-    ax.axhline(100, color='k', ls='--', label='100%')
+    ax.axhline(100, color='k', ls='--')
     ax.legend(loc='best', fontsize=14)
     ax.set_xlabel('Lag Time (ns)', fontsize=18)
-    ax.set_ylabel('Retained (%)', fontsize=18)
+    ax.set_ylabel('Retained Data (%)', fontsize=18)
     ax.set_ylim((0, 105))
+    ax.set_yticks(list(range(20, 120, 20)))
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
     ax.set_xscale('log')
 
 
