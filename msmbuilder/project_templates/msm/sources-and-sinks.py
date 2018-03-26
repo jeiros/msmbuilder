@@ -28,15 +28,10 @@ for system, msm in msms_type.items():
     backup('{}'.format(system_name))  # backup root folder to avoid clashes
     for ev, ev_name in zip(range(1, 4), ['1st', '2nd', '3rd']):
         print(system_name, ev, ev_name)
-
-        source, sink = get_source_sink(msm, clusterer, eigenvector=ev)
+        source, sink = get_source_sink(msm, clusterer, eigenvector=ev, out_naming='clusterer')
         # Define and create folders
         source_dir = '{}/{}/source'.format(system_name, ev_name)
         sink_dir = '{}/{}/sink'.format(system_name, ev_name)
-
-
-        backup('{}/'.format(system_name)) # backup root folder to avoid clashes
-
 
         if not os.path.isdir(source_dir):
             os.makedirs(source_dir)
@@ -114,9 +109,6 @@ for system, msm in msms_type.items():
         # Top paths plot
         num_paths = 3
 
-        pos = clusterer.cluster_centers_[msm.state_labels_][:, 0:2]
-        w = msm.left_eigenvectors_[:, ev] - msm.left_eigenvectors_[:, ev].min()
-        w /= w.max()
         f, ax = plt.subplots(figsize=figure_dims(600, 0.9))
         ax = plot_tpt(
             msm=msm,
