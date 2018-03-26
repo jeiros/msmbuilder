@@ -116,7 +116,7 @@ for system, msm in msms_type.items():
             txx=txx,
             ev=ev,
             ax=ax,
-            title='Top {} paths -- {} dynamical process'.format(num_paths, ev_name),
+            title='Top {} paths of {} dynamical process'.format(num_paths, ev_name),
             num_paths=num_paths
 
         )
