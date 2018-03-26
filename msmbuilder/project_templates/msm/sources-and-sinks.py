@@ -1,15 +1,14 @@
 import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
-from msmbuilder.io import load_generic, load_trajs, load_meta
-from plot_utils import figure_dims, plot_src_sink, plot_microstates, plot_tpt
-from traj_utils import split_trajs_by_type, load_in_vmd, \
+from msmbuilder.io import load_generic, load_trajs
+from plot_utils import figure_dims, plot_src_sink, plot_tpt
+from traj_utils import split_trajs_by_type, \
     get_source_sink, generate_traj_from_stateinds, write_cpptraj_script
 from msmadapter.adaptive import create_folder
 from msmbuilder.io.sampling import sample_states
 from msmbuilder.io import backup
 from msmbuilder import tpt
-import msmexplorer as msme
 import os
 
 
