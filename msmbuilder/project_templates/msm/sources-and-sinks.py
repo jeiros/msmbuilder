@@ -25,6 +25,7 @@ ttrajs_subtypes = split_trajs_by_type(ttrajs, meta)
 
 for system, msm in msms_type.items():
     system_name = ''.join(system.split())
+    backup('{}'.format(system_name))  # backup root folder to avoid clashes
     for ev, ev_name in zip(range(1, 4), ['1st', '2nd', '3rd']):
         print(system_name, ev, ev_name)
 
