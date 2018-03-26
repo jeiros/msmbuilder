@@ -15,7 +15,7 @@ import os
 
 sns.set_style('ticks')
 colors = sns.color_palette()
-n_clusters = 10
+n_clusters = 3
 # Load
 meta, ttrajs = load_trajs('ttrajs')
 clusterer = load_generic('clusterer.pkl')
