@@ -3,7 +3,7 @@
 {{header}}
 """
 
-from msmbuilder.io import load_trajs, save_trajs, save_generic, load_meta, save_meta
+from msmbuilder.io import load_trajs, save_trajs, save_generic, load_meta
 from msmbuilder.msm import MarkovStateModel
 
 
