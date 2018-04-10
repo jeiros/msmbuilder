@@ -12,7 +12,7 @@ depends:
 import mdtraj as md
 from msmbuilder.io.sampling import sample_dimension
 from msmbuilder.io import load_trajs, save_generic, preload_tops
-from traj_utils import split_trajs_by_type
+from traj_utils import split_trajs_by_type, generate_traj_from_stateinds
 
 
 def generate_traj(top, inds):
@@ -56,5 +56,5 @@ if __name__ == '__main__':
         system_name = ''.join(k.split())
         save_generic(v, 'tica-dimension-{}-{}.pkl'.format(tic, system_name))
         top = meta.iloc[v[0][0]]['top_abs_fn']
-        tic_traj = generate_traj(top=top, inds=v)
+        tic_traj = generate_traj_from_stateinds(inds=v, meta=meta, atom_selection='not name H1P')
         tic_traj.save_netcdf("tic{}-{}.nc".format(tic, system_name))
