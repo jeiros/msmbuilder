@@ -18,7 +18,8 @@ import datetime
 import os
 today = datetime.date.today().isoformat()
 o_dir = '{}_plots'.format(today)
-os.mkdir(o_dir)
+if not os.path.exists(o_dir):
+    os.mkdir(o_dir)
 
 
 sns.set_style('ticks')
