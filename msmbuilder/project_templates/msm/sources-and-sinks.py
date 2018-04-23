@@ -1,21 +1,21 @@
+import os
+
 import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
-from msmbuilder.io import load_generic, load_trajs
+from msmadapter.adaptive import create_folder
 from plot_utils import figure_dims, plot_src_sink, plot_tpt
 from traj_utils import split_trajs_by_type, \
     get_source_sink, generate_traj_from_stateinds, write_cpptraj_script
-from msmadapter.adaptive import create_folder
-from msmbuilder.io.sampling import sample_states
-from msmbuilder.io import backup
+
 from msmbuilder import tpt
-import os
-
-
+from msmbuilder.io import backup
+from msmbuilder.io import load_generic, load_trajs
+from msmbuilder.io.sampling import sample_states
 
 sns.set_style('ticks')
 colors = sns.color_palette()
-n_clusters = 3
+n_samples = 3
 # Load
 meta, ttrajs = load_trajs('ttrajs')
 clusterer = load_generic('clusterer.pkl')
@@ -42,12 +42,12 @@ for system, msm in msms_type.items():
         src_ev = sample_states(
             ttrajs_subtypes[system],
             clusterer.cluster_centers_[[source]],
-            k=n_clusters
+            k=n_samples
         )
         snk_ev = sample_states(
             ttrajs_subtypes[system],
             clusterer.cluster_centers_[[sink]],
-            k=n_clusters
+            k=n_samples
         )
         # Add symlink of prmtop for easy loading after with Chimera
         a_traj_index = src_ev[0][0][0]  # anyone will do since they are already split by traj type at this point
