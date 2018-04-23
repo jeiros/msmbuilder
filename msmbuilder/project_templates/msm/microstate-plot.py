@@ -11,13 +11,16 @@ depends:
 # ? include "plot_header.template"
 # ? from "plot_macros.template" import xdg_open with context
 
+import datetime
+import os
+
 import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
+from plot_utils import plot_ergodic_subspace
+
 from msmbuilder.io import load_trajs, load_generic
-from plot_utils import plot_ergodic_subspace, plot_overlayed_types
-import datetime
-import os
+
 today = datetime.date.today().isoformat()
 o_dir = '{}_plots'.format(today)
 if not os.path.exists(o_dir):
@@ -54,9 +57,10 @@ def plot_microstates(ax, msm, obs=(0, 1), eigenvector=1,
 
 def plot_cluster_centers(ax):
     ax.hexbin(txx[:, 0], txx[:, 1],
-              cmap=sns.cubehelix_palette(as_cmap=True),
+              cmap='Greys',
               mincnt=1,
-              bins='log', alpha=0.3
+              bins='log',
+              alpha=0.3
               )
     ax.scatter(clusterer.cluster_centers_[:, 0],
                clusterer.cluster_centers_[:, 1],
@@ -74,19 +78,17 @@ txx = np.concatenate(list(ttrajs.values()))
 msms_type = load_generic('msm_dict.pkl')
 
 # Ergodic plots
-fig, axergo = plt.subplots(figsize=(7, 5))
-axergo.set_title('tICA ergodic subspace')
-axergo = plot_cluster_centers(axergo)
 i = 0
 for name, msm in msms_type.items():
-    print(name, 'ergodic subplot')
-    axergo = plot_ergodic_subspace(msm, clusterer, color=colors[i], alpha=0.5,
-                                   label='{}'.format(name), ax=axergo)
+    fig, axergo = plt.subplots(figsize=(7, 5))
+    axergo.set_title('tICA ergodic subspace')
+    axergo = plot_cluster_centers(axergo)
+    axergo = plot_ergodic_subspace(msm, clusterer, color=colors[i], alpha=1, ax=axergo)
     i += 1
-plt.legend(loc='best')
-fig.tight_layout()
-fig.savefig('{}/ergodic_subspace.pdf'.format(o_dir))
-fig.clf()
+    axergo.set_title('{}'.format(name))
+    fig.tight_layout()
+    fig.savefig('{}'.format(o_dir) + '/ergodic-space' + '_'.join(name.split()) + '.pdf')
+    fig.clf()
 
 # Transition plots with source and sinks
 for name, msm in msms_type.items():
