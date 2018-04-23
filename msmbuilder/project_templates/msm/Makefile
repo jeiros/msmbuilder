@@ -12,5 +12,9 @@ microstates:
 sources: msm_dict.pkl
 	python sources_and_sinks.py
 
+validate:
+	python validate-msm.py
+	python validate-msm-plot.py
+
 clean:
 	rm -rf *bak*
