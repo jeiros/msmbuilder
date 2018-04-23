@@ -1,29 +1,32 @@
 """
 Plot the validation results
 """
-from pyemma.plots import plot_cktest
-from msmbuilder.io import load_meta, load_generic
 import datetime
 import os
+
+import seaborn as sns
+from pyemma._base.model import SampledModel
+from pyemma.msm import ChapmanKolmogorovValidator
+from pyemma.plots import plot_cktest
+
+from msmbuilder.io import load_meta
+
+sns.set_style('ticks')
+
+
 today = datetime.date.today().isoformat()
 o_dir = '{}_plots'.format(today)
 if not os.path.exists(o_dir):
     os.mkdir(o_dir)
 
 
-def cleanup_top_right_axes(ax):
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    return ax
-
-
 # Load
 meta = load_meta()
-ck_tests = load_generic('ck_tests_pyemma.pkl')
 for system in meta.type.unique():
     system_name = ''.join(system.split())
     system_meta = meta[meta.type == system]
-    ck = ck_tests[system]
+    ck = ChapmanKolmogorovValidator.load('ck_tests_pyemma.pkl', system_name)
+    ck.has_errors = issubclass(ck.test_model.__class__, SampledModel)
 
     # Plot the CK results
     f, axarr = plot_cktest(
@@ -38,11 +41,6 @@ for system in meta.type.unique():
         dt=0.2,
         units='ns'
     )
-    for col in axarr:
-        for ax in col:
-            cleanup_top_right_axes(ax)
+    sns.despine()
     f.tight_layout()
     f.savefig('{}/{}ck_test.pdf'.format(o_dir, system_name))
-
-save_generic(msms_type, 'pyemma_msms.pkl')
-

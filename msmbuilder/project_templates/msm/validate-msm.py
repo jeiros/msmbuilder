@@ -4,7 +4,9 @@ and build a chapman kolmogorov test
 """
 
 from pyemma.msm import BayesianMSM
-from msmbuilder.io import save_generic, load_meta, load_trajs
+
+from msmbuilder.io import load_meta, load_trajs
+
 # Settings
 lag_time = 100  # 20 ns if a stride of 0.2 ns is used between frames
 n_macrostates = 5  # Number of macrostates to do the CK test on
@@ -32,4 +34,4 @@ for system in meta.type.unique():
         n_jobs=-1,
         mlags=mlags
     )
-    ck.save('ck_tests.pkl', model_name=system_name)
+    ck.save('ck_tests_pyemma.pkl', system_name)
