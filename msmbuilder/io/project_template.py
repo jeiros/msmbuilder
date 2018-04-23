@@ -45,9 +45,19 @@ def get_layout():
                             'msm/microstate-plot.py',
                             'msm/microstate-traj.py',
                             'msm/sources-and-sinks.py',
+                            'msm/validate-msm.py',
+                            'msm/validate-msm-plot.py'
                             'msm/Makefile',
                         ],
-                        [],
+                        [
+                            TemplateDir(
+                                'lumping',
+                                [
+                                    'lumping/macrostate.py'
+                                ],
+                                []
+                            )
+                        ],
                     )
                 ]
             )
