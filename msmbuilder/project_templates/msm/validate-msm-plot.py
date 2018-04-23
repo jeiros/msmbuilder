@@ -19,13 +19,14 @@ o_dir = '{}_plots'.format(today)
 if not os.path.exists(o_dir):
     os.mkdir(o_dir)
 
+n_macrostates = 5
 
 # Load
 meta = load_meta()
 for system in meta.type.unique():
     system_name = ''.join(system.split())
     system_meta = meta[meta.type == system]
-    ck = ChapmanKolmogorovValidator.load('ck_tests_pyemma.pkl', system_name)
+    ck = ChapmanKolmogorovValidator.load('ck_tests_pyemma_{}-macrostates.pkl'.format(n_macrostates), system_name)
     ck.has_errors = issubclass(ck.test_model.__class__, SampledModel)
 
     # Plot the CK results

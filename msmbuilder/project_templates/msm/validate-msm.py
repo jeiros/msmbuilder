@@ -34,4 +34,4 @@ for system in meta.type.unique():
         n_jobs=-1,
         mlags=mlags
     )
-    ck.save('ck_tests_pyemma.pkl', system_name)
+    ck.save('ck_tests_pyemma_{}-macrostates.pkl'.format(n_macrostates), system_name)
