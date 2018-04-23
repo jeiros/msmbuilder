@@ -7,17 +7,20 @@
 # ? from "plot_macros.template" import xdg_open with context
 
 
-import numpy as np
-import seaborn as sns
-from matplotlib import pyplot as plt
-from msmbuilder.io import load_trajs, load_generic
-from msmexplorer import plot_free_energy, plot_trace2d
-from plot_utils import plot_tica_timescales, plot_singletic_trajs, plot_overlayed_types
-from traj_utils import split_trajs_by_type
-from plot_utils import figure_dims, plot_tic_loadings
 import datetime
 import os
 
+import mdtraj
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
+from msmexplorer import plot_free_energy, plot_trace2d
+from plot_utils import figure_dims, plot_tic_loadings
+from plot_utils import plot_tica_timescales, plot_singletic_trajs, plot_overlayed_types
+from traj_utils import split_trajs_by_type
+
+from msmbuilder.io import load_trajs, load_generic
 
 today = datetime.date.today().isoformat()
 o_dir = '{}_plots'.format(today)
@@ -34,6 +37,7 @@ st = 10  # for smaller 2d trace plots
 if __name__ == '__main__':
     # Load
     tica = load_generic('tica.pkl')
+    feat = load_generic('feat.pkl')
     meta, ttrajs = load_trajs('ttrajs')
     txx = np.concatenate(list(ttrajs.values()))
     ttrajs_subtypes = split_trajs_by_type(ttrajs, meta)
@@ -99,3 +103,12 @@ if __name__ == '__main__':
     ax.set(ylabel='Component')
     f.tight_layout()
     f.savefig('{}/tica_loadings.pdf'.format(o_dir))
+
+    # Reporting of top tICS
+    traj = mdtraj.load(meta.iloc[0]['traj_fn'], top=meta.iloc[0]['top_fn'])
+    df_feat = pd.DataFrame(feat.describe_features(traj))
+
+    # argsort goes from smallest to biggest so we get the last 10 as being the 10 most important dihedrals needed to describe the tIC
+    important_inds = np.argsort(abs(tica.components_[0, :]))[-10:]
+    df_important = df_feat.iloc[important_inds]
+    df_important.to_html('important-tICS.pandas.html')
