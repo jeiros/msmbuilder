@@ -10,12 +10,13 @@
 
 import seaborn as sns
 from matplotlib import pyplot as plt
-from msmbuilder.io import load_generic
-
+from msmbuilder.io import load_generic, load_meta
+import numpy as np
 from plot_utils import figure_dims, plot_tic_loadings
 import datetime
 import os
-
+import mdtraj
+import pandas as pd
 
 today = datetime.date.today().isoformat()
 o_dir = '{}_plots'.format(today)
@@ -31,6 +32,8 @@ st = 10  # for smaller 2d trace plots
 
 if __name__ == '__main__':
     # Load
+    meta = load_meta()
+    feat = load_generic('feat.pkl')
     sptica_list = load_generic('sptica_list.pkl')
     title_list = [
         r'tICA $(\rho=0)$',
@@ -49,4 +52,15 @@ if __name__ == '__main__':
         )
     f.legend(loc='lower center', ncol=3, bbox_to_anchor=(0.5, -0.045), frameon=False)
     f.tight_layout()
-    fig.savefig('{}/sparse_tica.pdf'.format(o_dir))
+    f.savefig('{}/sparse_tica.pdf'.format(o_dir))
+
+
+
+    # Reporting of top tICS
+    traj = mdtraj.load(meta.iloc[0]['traj_fn'], top=meta.iloc[0]['top_fn'])
+    df_feat = pd.DataFrame(feat.describe_features(traj))
+
+    sptica =  sptica_list[-1]  # Use last sparse tica from the list (strongest rho value)
+    tic1_loads = list(np.nonzero(sptica.components_[0, :])[0])  # See what features are non-zero
+    df_important = df_feat.iloc[tic1_loads]
+    df_important.to_html('important-sparse-tICS.pandas.html')
