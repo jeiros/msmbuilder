@@ -29,8 +29,8 @@ def plot_timescales(ax, timescales, ylabel=True):
     for i in range(n_timescales):
         ax.errorbar(
             x=timescales['lag_time'],
-            y=timescales['timescale_{}'.format(i)] * 1000,  # in ns
-            yerr=timescales['timescale_{}_unc'.format(i)] * 1000,  # in ns
+            y=timescales['timescale_{}'.format(i)],  # in microseconds
+            yerr=timescales['timescale_{}_unc'.format(i)],  # in microseconds
             label=None,  # pandas be interfering
             fmt='o',
         )
@@ -38,13 +38,13 @@ def plot_timescales(ax, timescales, ylabel=True):
     xmin, xmax = ax.get_xlim()
 
     xx = np.linspace(xmin, xmax)
-    ax.plot(xx, xx, color=colors[2], label='$y=x$')
+    ax.plot(xx, xx/1000, color=colors[2], label='$y=x$')
     ax.legend(loc='best', fontsize=14)
     ax.set_xlabel('Lag Time (ns)', fontsize=18)
     if ylabel:
-        ax.set_ylabel('Implied Timescales (ns)', fontsize=18)
+        ax.set_ylabel('Implied Timescales $(\mu s)$', fontsize=18)
     ax.set_yscale('log')
-    ax.set_xscale('log')
+
 
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
@@ -64,7 +64,7 @@ def plot_trimmed(ax, timescales):
     ax.set_yticks(list(range(20, 120, 20)))
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
-    ax.set_xscale('log')
+
 
 
 # Load
