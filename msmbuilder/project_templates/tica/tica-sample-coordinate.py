@@ -40,7 +40,7 @@ if __name__ == '__main__':
     print('Found {} types in meta'.format(len(samples_by_subtype.keys())))
 
     for system in ttrajs_subtypes.keys():
-        print('Sampling {} 100 tIC-{} frames'.format(system, tic))
+        print('Sampling {} {} tIC-{} frames'.format(system, n_samples, tic))
         inds = sample_dimension(ttrajs_subtypes[system],
                                 dimension=tic, n_frames=n_samples,
                                 scheme=scheme)

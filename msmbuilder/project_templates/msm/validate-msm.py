@@ -5,7 +5,7 @@ and build a chapman kolmogorov test
 
 from pyemma.msm import BayesianMSM
 
-from msmbuilder.io import load_meta, load_trajs
+from msmbuilder.io import load_meta, load_trajs, backup
 
 # Settings
 lag_time = 100  # 20 ns if a stride of 0.2 ns is used between frames
@@ -34,4 +34,6 @@ for system in meta.type.unique():
         n_jobs=-1,
         mlags=mlags
     )
-    ck.save('ck_tests_pyemma_{}-macrostates.pkl'.format(n_macrostates), system_name)
+    fname = 'ck_tests_pyemma_{}-macrostates.pkl'.format(n_macrostates)
+    backup(fname)
+    ck.save(fname, system_name)

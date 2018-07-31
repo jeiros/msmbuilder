@@ -10,3 +10,10 @@ clean:
 sample: tica-sample-coordinate.py
 	python tica-sample-coordinate.py
 	python tica-sample-coordinate-plot.py
+
+sparse:
+	python sparse-tica.py
+
+sparseplot: sptica_list.pkl
+	python sparse-tica-plot.py
+

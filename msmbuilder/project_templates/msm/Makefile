@@ -8,8 +8,9 @@ microstates:
 	python microstate.py
 	python microstate-plot.py
 
-traj: msm-dict.pkl
-    python microstate-traj.py
+
+traj: msm_dict.pkl
+	python microstate-traj.py
 
 sources: msm_dict.pkl
 	python sources-and-sinks.py

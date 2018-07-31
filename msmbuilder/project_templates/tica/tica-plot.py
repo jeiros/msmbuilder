@@ -109,6 +109,6 @@ if __name__ == '__main__':
     df_feat = pd.DataFrame(feat.describe_features(traj))
 
     # argsort goes from smallest to biggest so we get the last 10 as being the 10 most important dihedrals needed to describe the tIC
-    important_inds = np.argsort(abs(tica.components_[0, :]))[-10:]
+    important_inds = list(reversed(np.argsort(abs(tica.components_[0, :]))[-10:]))
     df_important = df_feat.iloc[important_inds]
     df_important.to_html('important-tICS.pandas.html')

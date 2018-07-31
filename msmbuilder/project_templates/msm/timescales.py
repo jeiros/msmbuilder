@@ -26,17 +26,19 @@ timestep = int(meta['step_ps'].unique())
 lagtimes = [
     1,  # 2 ns
     10,  # 20 ns
+    20,  # 40 ns
+    50,  # 100 ns
     100,  # 200 ns
-    200,  # 400 ns
 ]
 st = 10
+n_timescales = 10
 print(lagtimes)
 
 
 # Define what to do for parallel execution
 def at_lagtime(lt, ktrajs):
     print('lt = ', lt)
-    msm = MarkovStateModel(lag_time=lt, n_timescales=5, verbose=True)
+    msm = MarkovStateModel(lag_time=lt, n_timescales=n_timescales, verbose=True)
     msm.fit(list(ktrajs.values()))
     ret = {
         'lag_time': lt * timestep * st / 1000,  # in ns
@@ -58,13 +60,14 @@ def sampled_ktraj(ktraj):
     return s_kj
 
 
-for system in meta.type.unique():
-    system_name = ''.join(system.split())
-    system_meta = meta[meta.type == system]
-    _, ktrajs_subtype = load_trajs('{}_ktrajs'.format(system_name), system_meta)
-    with Pool() as p:
-        results = p.map(partial(at_lagtime, ktrajs=sampled_ktraj(ktrajs_subtype)), lagtimes)
-    df = pd.DataFrame(results)
-    # Save
-    df.to_pickle('{}timescales.pandas.pkl'.format(system_name))
-    df.to_html('{}timescales.pandas.html'.format(system_name))
+if __name__ == '__main__':
+    for system in meta.type.unique():
+        system_name = ''.join(system.split())
+        system_meta = meta[meta.type == system]
+        _, ktrajs_subtype = load_trajs('{}_ktrajs'.format(system_name), system_meta)
+        with Pool() as p:
+            results = p.map(partial(at_lagtime, ktrajs=sampled_ktraj(ktrajs_subtype)), lagtimes)
+        df = pd.DataFrame(results)
+        # Save
+        df.to_pickle('{}timescales.pandas.pkl'.format(system_name))
+        df.to_html('{}timescales.pandas.html'.format(system_name))
