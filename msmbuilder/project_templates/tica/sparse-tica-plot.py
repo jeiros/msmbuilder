@@ -67,4 +67,6 @@ if __name__ == '__main__':
     sptica = sptica_list[-1]  # Use last sparse tica from the list (strongest rho value)
     tic1_loads = list(np.nonzero(sptica.components_[0, :])[0])  # See what features are non-zero
     df_important = df_feat.iloc[tic1_loads]
+    df_important['weight'] = sptica.components_[0, tic1_loads]
+    df_important.sort_values('weight', ascending=False, inplace=True)
     df_important.to_html('important-sparse-tICS.pandas.html')
