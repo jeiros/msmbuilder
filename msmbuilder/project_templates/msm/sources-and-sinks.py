@@ -14,6 +14,7 @@ from msmbuilder.io import load_generic, load_trajs
 from msmbuilder.io.sampling import sample_states
 
 sns.set_style('ticks')
+plt.style.use('thesis')
 colors = sns.color_palette()
 n_samples = 3
 # Load
@@ -49,7 +50,7 @@ for system, msm in msms_type.items():
             clusterer.cluster_centers_[[sink]],
             k=n_samples
         )
-        # Add symlink of prmtop for easy loading after with Chimera
+        # Add symlink of prmtop for loading after with Chimera
         a_traj_index = src_ev[0][0][0]  # anyone will do since they are already split by traj type at this point
         top_path = meta.loc[a_traj_index]['top_abs_fn']
         top_basename = os.path.basename(top_path)
@@ -58,15 +59,16 @@ for system, msm in msms_type.items():
             os.path.join('{}/{}/{}'.format(system_name, ev_name, top_basename))
         )
         # Plot source and sink in landscape
-        f, ax = plt.subplots(figsize=figure_dims(1800))
+        f, ax = plt.subplots(figsize=figure_dims(1000))
         ax = plot_src_sink(
             msm, clusterer, ev, txx, source, sink,
-            clabel='{} dynamical eigenvector'.format(ev_name),
+            clabel='{} dynamical EV'.format(ev_name),
             title=system
         )
+        sns.despine()
         f.tight_layout()
         f.savefig(
-            os.path.join('{}/{}/landscape.pdf'.format(system_name, ev_name))
+            os.path.join('{}/{}/{}-{}-landscape.pdf'.format(system_name, ev_name, system_name, ev_name))
         )
         # Frames belonging to source and sinks
         traj_src = generate_traj_from_stateinds(
@@ -116,11 +118,13 @@ for system, msm in msms_type.items():
             txx=txx,
             ev=ev,
             ax=ax,
-            title='Top {} paths of {} dynamical process'.format(num_paths, ev_name),
+            title='{} - {} dynamical EV'.format(system, ev_name),
             num_paths=num_paths
-
         )
-        f.savefig('{}/{}/top_paths.pdf'.format(system_name, ev_name))
+        sns.despine()
+        ax.set(xlabel='tIC 1', ylabel='tIC 2')
+        f.tight_layout()
+        f.savefig('{}/{}/{}-{}-top_paths.pdf'.format(system_name, ev_name, system_name, ev_name))
         # Save clusters along top path
         create_folder('{}/{}/top_path'.format(system_name, ev_name))
         net_flux = tpt.net_fluxes(
