@@ -50,7 +50,7 @@ for system, msm in msms_type.items():
             clusterer.cluster_centers_[[sink]],
             k=n_samples
         )
-        # Add symlink of prmtop for loading after with Chimera
+        # Add symlink of prmtop for easy loading after with Chimera
         a_traj_index = src_ev[0][0][0]  # anyone will do since they are already split by traj type at this point
         top_path = meta.loc[a_traj_index]['top_abs_fn']
         top_basename = os.path.basename(top_path)
@@ -109,22 +109,29 @@ for system, msm in msms_type.items():
 
         # TPT analysis
         # Top paths plot
-        num_paths = 3
+        num_paths = 1
 
         f, ax = plt.subplots(figsize=figure_dims(600, 0.9))
+
         ax = plot_tpt(
             msm=msm,
             clusterer=clusterer,
             txx=txx,
             ev=ev,
             ax=ax,
-            title='{} - {} dynamical EV'.format(system, ev_name),
             num_paths=num_paths
+        )
+        ax = plot_src_sink(
+            msm, clusterer, ev, txx, source, sink,
+            clabel='{} dynamical EV'.format(ev_name),
+            # title=system
         )
         sns.despine()
         ax.set(xlabel='tIC 1', ylabel='tIC 2')
         f.tight_layout()
         f.savefig('{}/{}/{}-{}-top_paths.pdf'.format(system_name, ev_name, system_name, ev_name))
+
+
         # Save clusters along top path
         create_folder('{}/{}/top_path'.format(system_name, ev_name))
         net_flux = tpt.net_fluxes(
