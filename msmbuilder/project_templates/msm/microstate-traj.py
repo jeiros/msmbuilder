@@ -14,7 +14,7 @@ import numpy as np
 from msmexplorer import plot_free_energy, plot_trace2d, plot_trace
 from msmbuilder.io import load_trajs, save_generic, preload_tops, backup, load_generic
 from msmbuilder.io.sampling import sample_msm
-from traj_utils import split_trajs_by_type
+from traj_utils import split_trajs_by_type, generate_traj_from_stateinds
 from matplotlib import pyplot as plt
 import datetime
 import os
@@ -63,10 +63,7 @@ for system in ttrajs_subtypes.keys():
     f.savefig('{}/{}-msm-traj-tICs-frame.pdf'.format(o_dir, system_name))
     # Make traj
     top = meta.iloc[inds[0][0]]['top_abs_fn']
-    traj = md.join(
-        md.load_frame(meta.loc[traj_i]['traj_fn'], index=frame_i, top=top)
-        for traj_i, frame_i in inds
-    )
+    traj = generate_traj_from_stateinds(inds, meta, atom_selection='not name H1P')
     traj.center_coordinates()
     traj.superpose(traj, 0)
     # Save traj
