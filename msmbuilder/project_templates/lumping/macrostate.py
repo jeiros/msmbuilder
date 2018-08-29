@@ -8,16 +8,18 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from msmadapter.utils import create_folder
 from traj_utils import write_cpptraj_script, split_trajs_by_type
+from plot_utils import figure_dims
 import msmexplorer as msme
-from msmbuilder.io import load_trajs, load_generic, backup, save_trajs
+from msmbuilder.io import load_trajs, load_generic, backup, save_trajs, save_generic
 from msmbuilder.lumping import PCCAPlus
 from msmbuilder.msm import MarkovStateModel
+from msmbuilder.tpt import mfpts
 import matplotlib.patches as mpatches
 
 # Settings
-n_macrostates = 4
-n_samples = 5
-
+n_macrostates = 3
+n_samples = 3
+plt.style.use('thesis')
 
 # The default colors of UCSF chimera in the order they are assigned
 # (at least in my machine) to new models
@@ -141,22 +143,42 @@ def plot_spawns_tica(txx, pcca_frames):
     plt.legend(loc='best', ncol=2)
     return f, ax
 
+def plot_microstates(ax, msm, pcca, macro, obs=(0, 1)):
+    scale = 100 / np.max(msm.populations_)
+    add_a_bit = 50
+    prune = clusterer.cluster_centers_[:, obs]
+    c = ax.scatter(
+        prune[msm.state_labels_, 0],
+        prune[msm.state_labels_, 1],
+        s=scale * msm.populations_ + add_a_bit,
+        c=mfpts(msm, sinks=np.argwhere(pcca.microstate_mapping_ == macro)) * timestep * msm.lag_time
+    )
+    plt.colorbar(mappable=c, label=r'MFPT ($\mu s$)')
+    ax.set_xlabel("tIC 1")
+    ax.set_ylabel("tIC 2")
+    return ax
 
 if __name__ == '__main__':
-
+    np.random.seed(42)
     # Load
     meta, ttrajs = load_trajs('ttrajs')
+    timestep = int(meta['step_ps'].unique()) / 1e6  # ps to us
     clusterer = load_generic('clusterer.pkl')
     txx = np.concatenate(list(ttrajs.values()))
     msms_type = load_generic('msm_dict.pkl')
     ttrajs_subtypes = split_trajs_by_type(ttrajs, meta)
 
-    print(ttrajs_subtypes.keys())
+
 
     for system, msm in msms_type.items():
         system_name = ''.join(system.split())
         o_dir0 = '{}'.format(system_name)
         o_dir = '{}/{}_macrostates'.format(system_name, n_macrostates)
+
+
+        print('--------' + '-'*len(system_name))
+        print('Lumping {}'.format(system_name))
+        print('--------' + '-' * len(system_name))
 
         backup(o_dir)
 
@@ -173,6 +195,7 @@ if __name__ == '__main__':
         pcca = PCCAPlus.from_msm(msm, n_macrostates)
         pccatrajs = pcca.transform(list(ktrajs_subtype.values()), mode='fill')
         save_trajs(pccatrajs, '{}/pccatrajs'.format(o_dir), meta_reset)
+        save_generic(pcca, '{}/pcca.pkl'.format(o_dir))
 
         # Plot microstate mapping to macrostate
         f, ax = plot_microstate_mapping(txx, clusterer, pcca)
@@ -204,6 +227,15 @@ if __name__ == '__main__':
             f.suptitle(system)
             f.savefig('{}/macrostates_tica_samples.pdf'.format(o_dir))
             plt.close(f)
+            # Plot a map of the MFPTs from each microstate in the MSM to the set of microstates
+            # that belong to this macrostate
+            f, ax = plt.subplots(figsize=figure_dims(800, 0.9))
+            msme.plot_free_energy(txx, n_levels=5, obs=(0,1), n_samples=5000, alpha=.1, ax=ax)
+            ax = plot_microstates(ax, msm, pcca, macro)
+            ax.set_title('Macrostate {} as sink'.format(macro))           
+            f.tight_layout()
+            sns.despine()
+            f.savefig('{}/mfpts_to_macro{}.pdf'.format(o_dir, macro))
 
         # build a coarsed MSM from the pcca trajectories
         # Use double the lag time of the microstate MSM
