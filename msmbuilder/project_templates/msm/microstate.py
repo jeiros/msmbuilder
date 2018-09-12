@@ -8,8 +8,7 @@ from msmbuilder.msm import MarkovStateModel
 
 
 # Settings
-lag_time = 1
-n_timescales = 5
+lag_time = 50  # 10 ns
 
 # Load
 meta = load_meta()
@@ -17,9 +16,14 @@ msms_type = {system: None for system in meta.type.unique()}
 for system in meta.type.unique():
     system_name = ''.join(system.split())
     system_meta = meta[meta.type == system]
+
+    print('-------------------' + '-' * len(system_name))
+    print('Estimating MSM for {}'.format(system_name))
+    print('-------------------' + '-' * len(system_name))
+
     _, ktrajs_subtype = load_trajs('{}_ktrajs'.format(system_name), system_meta)
     # Fit MSM
-    msm = MarkovStateModel(lag_time=lag_time, n_timescales=n_timescales, verbose=True)
+    msm = MarkovStateModel(lag_time=lag_time, verbose=True)
     msm.fit(list(ktrajs_subtype.values()))
 
     msms_type[system] = msm
