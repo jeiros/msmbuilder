@@ -35,5 +35,4 @@ for system in meta.type.unique():
         mlags=mlags
     )
     fname = 'ck_tests_pyemma_{}-macrostates.pkl'.format(n_macrostates)
-    backup(fname)
     ck.save(fname, system_name)
