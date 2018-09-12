@@ -13,15 +13,15 @@ from msmbuilder.io import load_trajs, save_trajs, save_generic
 from msmbuilder.cluster import MiniBatchKMeans
 from traj_utils import split_trajs_by_type
 
-n_clusters = 1000
-dim = 5
+n_clusters = 100
+
 # Load
 meta, ttrajs = load_trajs('ttrajs')
 ttrajs_subtypes = split_trajs_by_type(ttrajs, meta)
 # Fit
 clusterer = MiniBatchKMeans(n_clusters=n_clusters)
 print('Fitting clustering...')
-clusterer.fit([traj[:, :dim] for traj in ttrajs.values()])
+clusterer.fit([traj for traj in ttrajs.values()])
 save_generic(clusterer, 'clusterer.pkl')
 
 # Transform
@@ -33,7 +33,7 @@ for system, ttraj in ttrajs_subtypes.items():
     # Save
     ktrajs = {}
     for k, v in ttraj.items():
-        ktrajs[k] = clusterer.partial_transform(v[:, :dim])
+        ktrajs[k] = clusterer.partial_transform(v)
 
     ktrajs_subtype[system] = ktrajs
     save_trajs(ktrajs_subtype[system], '{}_ktrajs'.format(system_name), system_meta)
