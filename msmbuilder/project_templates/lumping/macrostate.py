@@ -17,7 +17,7 @@ from msmbuilder.tpt import mfpts
 import matplotlib.patches as mpatches
 
 # Settings
-n_macrostates = 3
+n_macrostates = 2
 n_samples = 3
 plt.style.use('thesis')
 
@@ -143,7 +143,6 @@ def plot_spawns_tica(txx, pcca_frames):
     plt.legend(loc='best', ncol=2)
     return f, ax
 
-
 def plot_microstates(ax, msm, pcca, macro, obs=(0, 1)):
     scale = 100 / np.max(msm.populations_)
     add_a_bit = 50
@@ -159,7 +158,6 @@ def plot_microstates(ax, msm, pcca, macro, obs=(0, 1)):
     ax.set_ylabel("tIC 2")
     return ax
 
-
 if __name__ == '__main__':
     np.random.seed(42)
     # Load
@@ -170,12 +168,15 @@ if __name__ == '__main__':
     msms_type = load_generic('msm_dict.pkl')
     ttrajs_subtypes = split_trajs_by_type(ttrajs, meta)
 
+
+
     for system, msm in msms_type.items():
         system_name = ''.join(system.split())
         o_dir0 = '{}'.format(system_name)
         o_dir = '{}/{}_macrostates'.format(system_name, n_macrostates)
 
-        print('--------' + '-' * len(system_name))
+
+        print('--------' + '-'*len(system_name))
         print('Lumping {}'.format(system_name))
         print('--------' + '-' * len(system_name))
 
@@ -229,9 +230,9 @@ if __name__ == '__main__':
             # Plot a map of the MFPTs from each microstate in the MSM to the set of microstates
             # that belong to this macrostate
             f, ax = plt.subplots(figsize=figure_dims(800, 0.9))
-            msme.plot_free_energy(txx, n_levels=5, obs=(0, 1), n_samples=5000, alpha=.1, ax=ax)
+            msme.plot_free_energy(txx, n_levels=5, obs=(0,1), n_samples=5000, alpha=.1, ax=ax)
             ax = plot_microstates(ax, msm, pcca, macro)
-            ax.set_title('Macrostate {} as sink'.format(macro))
+            ax.set_title('Macrostate {} as sink'.format(macro))           
             f.tight_layout()
             sns.despine()
             f.savefig('{}/mfpts_to_macro{}.pdf'.format(o_dir, macro))
